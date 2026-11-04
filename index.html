@@ -1,0 +1,699 @@
+<title>Menu Chez Marco</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1B1A18">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* Layout : ardoise du restaurant (fond charbon, étiquettes jaunes « coup de pinceau »), une colonne mobile, barre collante recherche + catégories, panier flottant. */
+:root{
+  color-scheme:dark;
+  --slate:#1B1A18; --slate-2:#252321; --slate-3:#302D2A; --line:#3E3A35;
+  --chalk:#F3EEE4; --chalk-2:#C9C1B3; --muted:#9A9184;
+  --yolk:#F5B50A; --yolk-d:#D99A00; --ink-on-yolk:#1B1A18;
+  --wa:#25D366; --ok:#3FBF6E; --warn:#F07A4A;
+  --f-display:'Anton','Impact','Arial Narrow Bold',sans-serif;
+  --f-body:'Familjen Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:130px}
+body{font-family:var(--f-body);font-size:15px;color:var(--chalk);background:var(--slate);line-height:1.45;overflow-x:hidden;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--slate)}
+img,svg{display:block}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+:focus-visible{outline:3px solid var(--yolk);outline-offset:2px;border-radius:8px}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Bandeau démo */
+.demo{background:var(--yolk);color:var(--ink-on-yolk);font-size:.72rem;font-weight:600;text-align:center;padding-block:5px;letter-spacing:.03em;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Étiquette pinceau */
+.brush{display:inline-block;position:relative;font-family:var(--f-display);font-weight:400;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-on-yolk);padding:3px 18px 2px 14px;line-height:1.15;
+  background:var(--yolk);clip-path:polygon(2% 8%,10% 0,40% 6%,70% 0,99% 10%,96% 50%,100% 92%,72% 100%,38% 94%,8% 100%,0 88%,3% 48%)}
+
+/* Hero */
+.hero{padding-block:26px 20px;display:grid;gap:14px}
+.mark{display:flex;align-items:flex-end;gap:12px}
+.mark .chez{font-family:var(--f-body);font-weight:700;font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;color:var(--yolk)}
+.mark h1{font-family:var(--f-display);font-weight:400;font-size:clamp(3rem,15vw,4.6rem);line-height:.9;letter-spacing:.01em;text-transform:uppercase}
+.tag{font-size:.78rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--chalk-2)}
+.lede{font-size:1rem;color:var(--chalk-2);max-width:34ch}
+.lede b{color:var(--yolk);font-weight:700}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:500;padding:7px 12px;border-radius:99px;background:var(--slate-2);border:1px solid var(--line);min-width:0}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+.pill.open .dot{background:var(--ok);box-shadow:0 0 0 4px rgba(63,191,110,.18)}
+.pill.closed .dot{background:var(--warn)}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;transition:transform .15s,background .2s;text-align:center;line-height:1.2}
+.btn:active{transform:scale(.97)}
+.btn svg{width:18px;height:18px;flex:0 0 auto}
+.btn-y{background:var(--yolk);color:var(--ink-on-yolk)}
+.btn-y:hover{background:var(--yolk-d)}
+.btn-line{border:1.5px solid var(--chalk-2);color:var(--chalk)}
+.btn-wa{background:var(--wa);color:#06230f}
+.cta .btn{flex:1 1 150px}
+
+/* Plat du jour */
+.today{display:flex;gap:14px;align-items:center;background:var(--slate-2);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.today .badge{flex:0 0 auto;width:62px;height:62px;border-radius:50%;background:var(--yolk);color:var(--ink-on-yolk);display:grid;place-items:center;text-align:center;font-family:var(--f-display);font-size:1.35rem;line-height:1;text-transform:uppercase;padding:6px;overflow:hidden}
+.today .tx{flex:1;min-width:0}
+.today small{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--yolk);font-weight:700}
+.today b{display:block;font-size:1.05rem}
+.today span{font-size:.82rem;color:var(--chalk-2)}
+
+/* Barre collante */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:rgba(27,26,24,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar .row{max-width:720px;margin:0 auto;padding-block:10px 6px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.search{position:relative;display:block}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
+.search input{width:100%;min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--slate-2);padding:0 12px 0 38px;font-size:16px}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:none;border-color:var(--yolk)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-block:4px 10px;max-width:720px;margin:0 auto;scrollbar-width:none;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;min-height:38px;padding:0 14px;display:inline-flex;align-items:center;border-radius:99px;font-size:.84rem;font-weight:600;color:var(--chalk-2);border:1px solid var(--line);background:var(--slate-2);white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--yolk);color:var(--ink-on-yolk);border-color:var(--yolk)}
+.chip.sep{margin-left:6px}
+
+/* Menu */
+.grp{margin-top:30px;display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--yolk);padding-bottom:6px}
+.grp h2{font-family:var(--f-display);font-weight:400;font-size:2.1rem;line-height:1;text-transform:uppercase}
+.grp p{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.cat{margin-top:22px}
+.cat-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cat-h h3{font-size:1.25rem}
+.cat-h .cnt{font-size:.74rem;color:var(--muted);font-weight:600}
+.cat-note{font-size:.8rem;color:var(--chalk-2);margin-top:8px}
+.items{list-style:none;margin-top:6px}
+.it{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.it:last-child{border-bottom:0}
+.it-m{flex:1;min-width:0}
+.it-r{display:flex;align-items:baseline;gap:8px}
+.it-n{font-size:.98rem;font-weight:600;color:var(--chalk);overflow-wrap:anywhere}
+.it-dots{flex:1;min-width:10px;border-bottom:2px dotted var(--line);transform:translateY(-4px)}
+.it-p{font-weight:700;font-size:.95rem;white-space:nowrap;color:var(--yolk);font-variant-numeric:tabular-nums}
+.it-d{font-size:.8rem;color:var(--muted);margin-top:2px}
+.day{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--yolk);border:1px solid var(--yolk-d);border-radius:99px;padding:1px 8px;margin-top:4px}
+.day.now{background:var(--yolk);color:var(--ink-on-yolk)}
+.add{position:relative;flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--slate-3);border:1.5px solid var(--line);color:var(--yolk);display:grid;place-items:center;transition:background .15s,transform .1s}
+.add:active{transform:scale(.9)}
+.add svg,.vb .pl svg{width:18px;height:18px;stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round}
+.add.has{background:var(--yolk);color:var(--ink-on-yolk);border-color:var(--yolk)}
+.qb{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:var(--chalk);color:var(--slate);font-size:.7rem;font-weight:700;display:none;place-items:center}
+.has .qb{display:grid}
+.vars{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.vb{position:relative;min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 5px 0 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--slate-2);font-size:.84rem;font-weight:500}
+.vb .vl{color:var(--chalk-2)}
+.vb .vp{font-weight:700;color:var(--yolk);font-variant-numeric:tabular-nums}
+.vb .pl{width:32px;height:32px;border-radius:9px;background:var(--yolk);color:var(--ink-on-yolk);display:grid;place-items:center}
+.vb .pl svg{width:14px;height:14px}
+.vb.has{border-color:var(--yolk)}
+.empty-s{text-align:center;padding:40px 10px;color:var(--muted)}
+.empty-s b{display:block;color:var(--chalk);font-size:1rem;margin-bottom:4px}
+
+/* Infos */
+.info{margin-top:36px;display:grid;gap:14px}
+.panel{background:var(--slate-2);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px;min-width:0}
+.panel h3{font-family:var(--f-display);font-weight:400;font-size:1.5rem;text-transform:uppercase;letter-spacing:.02em}
+.hours{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:8px;font-variant-numeric:tabular-nums}
+.hours td{padding:9px 10px;border-bottom:1px dashed var(--line)}
+.hours td:last-child{text-align:right;font-weight:600}
+.hours tr.today td{background:rgba(245,181,10,.14)}
+.hours tr.today td:first-child{border-radius:10px 0 0 10px;font-weight:700}
+.hours tr.today td:last-child{border-radius:0 10px 10px 0}
+.tg{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--yolk);color:var(--ink-on-yolk);padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:2px}
+.panel p{font-size:.92rem;color:var(--chalk-2);margin-top:6px}
+.panel p strong{color:var(--chalk)}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.acts .btn{flex:1 1 130px}
+.services{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.services span{font-size:.74rem;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--chalk-2)}
+footer{padding-block:34px calc(110px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.78rem;color:var(--muted)}
+footer b{color:var(--chalk-2)}
+
+/* Panier flottant */
+.cartbar{position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;max-width:696px;margin:0 auto;display:flex;align-items:center;gap:12px;min-height:62px;padding:8px 8px 8px 16px;border-radius:16px;background:var(--yolk);color:var(--ink-on-yolk);box-shadow:0 14px 40px rgba(0,0,0,.55);transform:translateY(160%);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);text-align:left}
+.cartbar.show{transform:none}
+.cartbar .ic{position:relative;width:26px;height:26px;flex:0 0 auto}
+.cartbar .ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2}
+.cartbar .cnt{position:absolute;top:-7px;right:-9px;min-width:19px;height:19px;border-radius:99px;background:var(--slate);color:var(--yolk);font-size:.68rem;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.cartbar .ct{flex:1;line-height:1.2;min-width:0}
+.cartbar .ct small{display:block;font-size:.74rem;font-weight:600}
+.cartbar .ct b{font-size:1.08rem;font-variant-numeric:tabular-nums}
+.cartbar .go{background:var(--slate);color:var(--yolk);border-radius:12px;min-height:44px;padding:0 14px;font-weight:700;font-size:.88rem;display:flex;align-items:center;white-space:nowrap}
+.cartbar.bump{animation:bump .35s}
+@keyframes bump{40%{transform:scale(1.03)}}
+
+/* Feuilles */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+.ov.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;max-width:720px;margin:0 auto;max-height:92vh;max-height:92dvh;display:flex;flex-direction:column;background:var(--slate-2);border-radius:20px 20px 0 0;box-shadow:0 -20px 50px rgba(0,0,0,.5);transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+.sheet.show{transform:none;visibility:visible}
+.sh-h{display:flex;align-items:center;justify-content:space-between;padding:14px 12px 10px max(20px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);position:relative}
+.sh-h::before{content:"";position:absolute;top:6px;left:50%;width:40px;height:4px;border-radius:9px;background:var(--line);transform:translateX(-50%)}
+.sh-h h2{font-family:var(--f-display);font-weight:400;font-size:1.6rem;text-transform:uppercase;line-height:1.1;padding-top:4px}
+.x{width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.x:hover{background:var(--slate-3)}
+.x svg{width:20px;height:20px;stroke:var(--chalk);stroke-width:2;fill:none;stroke-linecap:round}
+.sh-b{overflow-y:auto;padding:4px max(20px,env(safe-area-inset-right,0px)) 16px max(20px,env(safe-area-inset-left,0px));overscroll-behavior:contain}
+.ln{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.ln .lm{flex:1;min-width:0}
+.ln .lm b{font-weight:600;font-size:.92rem;display:block;overflow-wrap:anywhere}
+.ln .lm small{color:var(--muted);font-size:.78rem}
+.stp{display:flex;align-items:center;border:1px solid var(--line);border-radius:12px;flex:0 0 auto}
+.stp button{width:40px;height:44px;display:grid;place-items:center;font-size:1.25rem;font-weight:700;color:var(--yolk)}
+.stp span{min-width:18px;text-align:center;font-weight:700}
+.ln .lt{min-width:70px;text-align:right;font-weight:700;font-size:.9rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.empty{text-align:center;color:var(--muted);padding:26px 0;font-size:.92rem}
+.tot{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0 2px}
+.tot span{letter-spacing:.14em;text-transform:uppercase;font-size:.8rem;font-weight:700}
+.tot b{font-size:1.5rem;color:var(--yolk);font-variant-numeric:tabular-nums}
+.fine{font-size:.76rem;color:var(--muted)}
+.ft{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--yolk);font-weight:700;margin:18px 0 8px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0}
+.seg span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:6px 6px;border-radius:12px;border:1.5px solid var(--line);font-size:.84rem;font-weight:600;cursor:pointer;line-height:1.2;background:var(--slate)}
+.seg input:checked+span{border-color:var(--yolk);color:var(--yolk)}
+.seg input:focus-visible+span{outline:3px solid var(--yolk);outline-offset:2px}
+.fld{margin-top:10px}
+.fld label{display:block;font-size:.8rem;color:var(--chalk-2);margin-bottom:4px}
+.fld input,.fld textarea{width:100%;font-size:16px;background:var(--slate);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-height:48px;resize:vertical}
+.fld input::placeholder,.fld textarea::placeholder{color:var(--muted)}
+.fld input:focus,.fld textarea:focus{outline:none;border-color:var(--yolk)}
+.sh-f{padding:12px max(20px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));border-top:1px solid var(--line);background:var(--slate)}
+.sh-f .btn{width:100%;min-height:54px;font-size:1rem}
+.sh-f .btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
+.sh-f .fine{text-align:center;margin-top:6px}
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:45;background:var(--chalk);color:var(--slate);font-weight:600;padding:9px 16px;border-radius:99px;font-size:.84rem;opacity:0;pointer-events:none;transition:all .25s;max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:640px){.info{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2c0 1.3.9 2.5 1.1 2.7.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></symbol>
+</defs></svg>
+
+<div class="demo" role="note">Démonstration Programactor · Bongo Space</div>
+
+<header class="hero wrap" id="top">
+  <div>
+    <div class="mark"><div><span class="chez">Chez</span><h1>Marco</h1></div></div>
+    <p class="tag">Restaurant · Cocktail · Bar</p>
+  </div>
+  <p class="lede">Plats locaux et à la carte <b>à partir de 1 000 F</b>. Commandez ici, on confirme sur WhatsApp.</p>
+  <div class="meta">
+    <span class="pill" id="status"><span class="dot"></span><span id="statusTxt">Horaires</span></span>
+    <span class="pill">Bonamoussadi · Douala</span>
+  </div>
+  <div class="today" id="todayBox" hidden>
+    <div class="badge" id="todayDay">Plat du jour</div>
+    <div class="tx"><small>Menu local du jour</small><b id="todayName"></b><span id="todayPrice"></span></div>
+    <button class="add" type="button" id="todayAdd" aria-label="Ajouter le plat du jour"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg><span class="qb">0</span></button>
+  </div>
+  <div class="cta">
+    <a class="btn btn-y" href="#menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Voir le menu</a>
+    <a class="btn btn-line" href="#infos">Horaires & adresse</a>
+  </div>
+</header>
+
+<div class="bar" id="bar">
+  <div class="row">
+    <label class="search"><span class="sr">Rechercher dans le menu</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Ndolè, poulet, mojito…" autocomplete="off" enterkeyhint="search">
+    </label>
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="Filtrer par catégorie"></div>
+</div>
+
+<main class="wrap" id="menu" aria-live="polite"></main>
+
+<section class="wrap info" id="infos" aria-label="Infos pratiques">
+  <div class="panel">
+    <h3>Horaires</h3>
+    <table class="hours" aria-label="Horaires d’ouverture"><tbody id="hours"></tbody></table>
+  </div>
+  <div class="panel">
+    <h3>Nous trouver</h3>
+    <p id="infoAddr"></p>
+    <div class="services"><span>Sur place</span><span>À emporter</span><span>Livraison</span></div>
+    <div class="acts">
+      <a class="btn btn-y" id="mapsBtn" href="#" target="_blank" rel="noopener">Itinéraire</a>
+      <a class="btn btn-wa" id="waInfo" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p><b>Chez Marco</b> · Bonamoussadi, Douala</p>
+  <p style="margin-top:8px">Maquette de démonstration · menu relevé sur la fiche Google du restaurant (févr. 2026)</p>
+  <p style="margin-top:8px">Proposée par Programactor · Bongo Space · <a href="https://programactor.pro" target="_blank" rel="noopener">programactor.pro</a></p>
+</footer>
+
+<button class="cartbar" id="cartbar" type="button" aria-label="Voir le panier" aria-hidden="true" tabindex="-1">
+  <span class="ic"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg><span class="cnt" id="cbCount">0</span></span>
+  <span class="ct"><small id="cbItems">0 article</small><b id="cbTotal">0 FCFA</b></span>
+  <span class="go">Voir le panier</span>
+</button>
+
+<div class="ov" id="ov"></div>
+
+<div class="sheet" id="cartSheet" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
+  <div class="sh-h"><h2 id="cartTitle">Votre commande</h2>
+    <button class="x" type="button" data-close aria-label="Fermer le panier"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="sh-b">
+    <div id="lines"></div>
+    <div class="tot"><span>Total</span><b id="shTotal">0 FCFA</b></div>
+    <p class="fine">Prix de la carte du restaurant. Frais de livraison confirmés par WhatsApp.</p>
+    <p class="ft">Mode</p>
+    <div class="seg" role="radiogroup" aria-label="Mode de commande">
+      <label><input type="radio" name="mode" value="place" checked><span>Sur place</span></label>
+      <label><input type="radio" name="mode" value="emporter"><span>À emporter</span></label>
+      <label><input type="radio" name="mode" value="livraison"><span>Livraison</span></label>
+    </div>
+    <div class="fld" id="tableFld"><label for="fTable">N° de table</label><input id="fTable" inputmode="numeric" placeholder="Ex. : 4"></div>
+    <div class="fld" id="addrFld" hidden><label for="fAddr">Adresse de livraison</label><input id="fAddr" autocomplete="street-address" placeholder="Quartier, rue, repère…"></div>
+    <div class="fld"><label for="fName">Votre nom (facultatif)</label><input id="fName" autocomplete="name" placeholder="Ex. : Carine"></div>
+    <div class="fld"><label for="fNote">Note (facultatif)</label><textarea id="fNote" rows="2" placeholder="Piment à part, complément, heure de retrait…"></textarea></div>
+  </div>
+  <div class="sh-f">
+    <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>Commander sur WhatsApp</a>
+    <p class="fine" id="waHint">WhatsApp s’ouvre avec la commande prête à envoyer (démo).</p>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   MENU CHEZ MARCO — seule source de données à mettre à jour
+   Source : photos du menu publiées sur la fiche Google Maps du restaurant
+   (« A4 Menu Design », févr. 2026). Tous les prix ci-dessous sont RÉELS.
+   Une ligne = un article :
+     cat  : catégorie · nom : nom affiché · desc : description (facultatif)
+     prix : prix en FCFA · vars : [[libellé, prix], …] si plusieurs prix
+     jour : 0 = lundi … 6 = dimanche (menu local du jour)
+   ===================================================================== */
+const MENU = {
+  "etablissement": {
+    "nom": "Chez Marco",
+    "adresse": "Tradex Bonamoussadi, en face du Centre spirituel jésuite, Douala",
+    "telephone": "+237 655 04 01 43",
+    "telephone2": "+237 682 68 04 85",
+    "whatsapp": "237655040143",
+    "horaires": [[10, 24], [10, 24], [10, 24], [10, 24], [8, 24], [10, 24], [8, 24]],
+    "_horaires_aide": "Lundi → dimanche, selon Google Maps. 24 = minuit."
+  },
+  "categories": [
+    {"id": "local",       "nom": "Menu local du jour",       "chip": "Menu local",  "groupe": "cuisine", "note": "Chaque plat est servi le jour indiqué."},
+    {"id": "carte",       "nom": "Menu à la carte",          "chip": "À la carte",  "groupe": "cuisine"},
+    {"id": "entrees",     "nom": "Entrées",                                         "groupe": "cuisine"},
+    {"id": "fastfood",    "nom": "Fast food",                                       "groupe": "cuisine"},
+    {"id": "petitdej",    "nom": "Petit déjeuner",           "chip": "Petit déj.",  "groupe": "cuisine"},
+    {"id": "complements", "nom": "Compléments",                                     "groupe": "cuisine", "note": "500 F la portion additionnelle."},
+    {"id": "bieres",      "nom": "Bières",                                          "groupe": "boissons"},
+    {"id": "jus",         "nom": "Sucreries",                                       "groupe": "boissons"},
+    {"id": "jusnat",      "nom": "Jus naturels",                                    "groupe": "boissons", "note": "Disponibles selon la saison."},
+    {"id": "cocktails",   "nom": "Cocktails",                                       "groupe": "boissons"},
+    {"id": "mocktails",   "nom": "Mocktails (sans alcool)",  "chip": "Mocktails",   "groupe": "boissons"},
+    {"id": "consos",      "nom": "Consos (au verre)",        "chip": "Consos",      "groupe": "boissons"},
+    {"id": "liqueurs",    "nom": "Liqueurs (bouteille)",     "chip": "Liqueurs",    "groupe": "boissons"},
+    {"id": "vins-rouges", "nom": "Vins rouges",                                     "groupe": "boissons"},
+    {"id": "vins-blancs", "nom": "Vins blancs",                                     "groupe": "boissons"},
+    {"id": "champagnes",  "nom": "Vins mousseux & champagne","chip": "Champagne",   "groupe": "boissons"},
+    {"id": "cafe",        "nom": "Café",                                            "groupe": "boissons"},
+    {"id": "the",         "nom": "Thé",                                             "groupe": "boissons", "note": "Compléments de thé : gingembre, clou de girofle, curcuma, moringa, cannelle, ail."}
+  ],
+  "articles": [
+    {"cat":"local","nom":"Okok","prix":2000,"jour":1},
+    {"cat":"local","nom":"Koki","prix":2000,"jour":2},
+    {"cat":"local","nom":"Haricot blanc","prix":2000,"jour":3},
+    {"cat":"local","nom":"Mbongo porc / poisson","prix":3000,"jour":4},
+    {"cat":"local","nom":"Ekwang","prix":2500,"jour":5},
+    {"cat":"local","nom":"Gombo pistache","prix":2500,"jour":5},
+    {"cat":"local","nom":"Bouillon viande","prix":3000,"jour":6},
+    {"cat":"local","nom":"Bouillon machoiron","prix":3000,"jour":6},
+    {"cat":"local","nom":"Taro sauce jaune","prix":2500,"jour":6},
+
+    {"cat":"carte","nom":"Riz sauté Mbounga","prix":1000},
+    {"cat":"carte","nom":"Riz sauté Mbounga viande","prix":1500},
+    {"cat":"carte","nom":"Sauce bolognaise","prix":1500},
+    {"cat":"carte","nom":"Eru","prix":2000},
+    {"cat":"carte","nom":"Légumes sautés","prix":2000},
+    {"cat":"carte","nom":"Riz sauté Mbounga gésier","prix":2000},
+    {"cat":"carte","nom":"Ndolè viande","prix":2500},
+    {"cat":"carte","nom":"Émincé de bœuf","prix":3000},
+    {"cat":"carte","nom":"Porc sauté","prix":3000},
+    {"cat":"carte","nom":"Tripes sautées","prix":3000},
+    {"cat":"carte","nom":"Poulet rôti","prix":3000},
+    {"cat":"carte","nom":"Poulet yassa","prix":3000},
+    {"cat":"carte","nom":"Gésier sauté","prix":3000},
+    {"cat":"carte","nom":"Riz sauté Mbounga porc / poulet","prix":3500},
+    {"cat":"carte","nom":"Rognon de bœuf","prix":3500},
+    {"cat":"carte","nom":"Ndolè porc / poulet","prix":3500},
+    {"cat":"carte","nom":"Poisson sole meunière","prix":3500},
+    {"cat":"carte","nom":"Poisson bar basquaise","prix":4000},
+    {"cat":"carte","nom":"Riz sauté Mbounga poisson bar / sole","prix":4000},
+    {"cat":"carte","nom":"Ndolè poisson bar","prix":4000},
+    {"cat":"carte","nom":"Ragoût de porc","prix":4000},
+    {"cat":"carte","nom":"Gambas","prix":7000},
+
+    {"cat":"entrees","nom":"Salade du chef","desc":"Oignons, carotte, chou, œufs, maïs doux, petits pois, saucisse","prix":2000},
+    {"cat":"entrees","nom":"Salade simple","desc":"Laitue, tomate, oignons, chou, carotte, avocat","prix":1500},
+
+    {"cat":"fastfood","nom":"Hamburger","vars":[["Viande",1500],["Poulet",2000]]},
+    {"cat":"fastfood","nom":"Poulet pané + portion de frites","prix":1500},
+    {"cat":"fastfood","nom":"Pack 1","desc":"1 hamburger + 1 poulet + 1 portion de frites","prix":2500},
+    {"cat":"fastfood","nom":"Portion de frites","desc":"Plantain ou pomme","prix":500},
+
+    {"cat":"petitdej","nom":"Omelette","vars":[["Nature",1000],["Garnie",1500]]},
+    {"cat":"petitdej","nom":"Omelette saucisse","prix":1500},
+    {"cat":"petitdej","nom":"Pack petit déjeuner complet","desc":"Omelette, thé ou café, pain, beurre, salade","prix":2000},
+
+    {"cat":"complements","nom":"Riz","prix":500},
+    {"cat":"complements","nom":"Spaghetti","prix":500},
+    {"cat":"complements","nom":"Miondo","prix":500},
+    {"cat":"complements","nom":"Fufu","prix":500},
+    {"cat":"complements","nom":"Couscous tapioca","prix":500},
+    {"cat":"complements","nom":"Plantain vapeur","prix":500},
+    {"cat":"complements","nom":"Plantain frit","prix":500},
+    {"cat":"complements","nom":"Pommes frites","prix":500},
+
+    {"cat":"bieres","nom":"33 Export","prix":1000},
+    {"cat":"bieres","nom":"Mutzig","prix":1000},
+    {"cat":"bieres","nom":"Castel Beer","prix":1000},
+    {"cat":"bieres","nom":"Beaufort Light","prix":1000},
+    {"cat":"bieres","nom":"Chill","prix":1000},
+    {"cat":"bieres","nom":"Booster Gin Tonic / Cola","prix":1000},
+    {"cat":"bieres","nom":"Doppel","prix":1000},
+    {"cat":"bieres","nom":"Petite Guinness","prix":1000},
+    {"cat":"bieres","nom":"Malta Guinness","prix":1000},
+    {"cat":"bieres","nom":"Smirnoff Ice Black / Ananas","prix":1000},
+    {"cat":"bieres","nom":"Harp / Origin","prix":1000},
+    {"cat":"bieres","nom":"Kadji Beer","prix":1000},
+    {"cat":"bieres","nom":"K44","prix":1000},
+    {"cat":"bieres","nom":"Frulati","prix":1000},
+    {"cat":"bieres","nom":"Kronenbourg 1664 Blanc","prix":1500},
+    {"cat":"bieres","nom":"Heineken","prix":1500},
+    {"cat":"bieres","nom":"Bavaria (sans alcool)","prix":1500},
+    {"cat":"bieres","nom":"Isenbeck","prix":1500},
+    {"cat":"bieres","nom":"Grande Guinness","prix":1500},
+    {"cat":"bieres","nom":"Guinness Smooth","prix":1500},
+
+    {"cat":"jus","nom":"Top Pamplemousse","prix":1000},
+    {"cat":"jus","nom":"Top Grenadine","prix":1000},
+    {"cat":"jus","nom":"Top Tonic Big","prix":1000},
+    {"cat":"jus","nom":"Coca-Cola / Sprite / Djino","prix":1000},
+    {"cat":"jus","nom":"Supermont","prix":1000},
+    {"cat":"jus","nom":"Vimto / Orangina","prix":1500},
+
+    {"cat":"jusnat","nom":"Bissap","prix":1000},
+    {"cat":"jusnat","nom":"Baobab","prix":1500},
+    {"cat":"jusnat","nom":"Lemon menthe","prix":1500},
+    {"cat":"jusnat","nom":"Ananas + gingembre / passion","prix":2000},
+    {"cat":"jusnat","nom":"Bitter cola","prix":2000},
+    {"cat":"jusnat","nom":"Mangue / cassis / pastèque","prix":2000},
+
+    {"cat":"cocktails","nom":"Mojito classique","desc":"Rhum, jus de citron, sucre de canne, citron, menthe, eau pétillante","prix":3000},
+    {"cat":"cocktails","nom":"Mojito orange / pastèque","desc":"Rhum, jus de citron, sucre de canne, citron, menthe, jus d’orange","prix":3000},
+    {"cat":"cocktails","nom":"Sex on the Beach","desc":"Vodka, liqueur d’orange, liqueur de pêche, jus d’orange","prix":3000},
+    {"cat":"cocktails","nom":"Americano","desc":"Campari, vermouth, eau gazeuse","prix":3000},
+    {"cat":"cocktails","nom":"Pinky Lady","desc":"Gin, jus de citron, sucre de canne","prix":3500},
+    {"cat":"cocktails","nom":"Daïquiri","desc":"Rhum, jus de citron, sucre de canne","prix":3500},
+    {"cat":"cocktails","nom":"Blue Lagoon","desc":"Vodka, curaçao, jus de citron","prix":3500},
+    {"cat":"cocktails","nom":"Piña Colada","desc":"Lait de coco, rhum, jus d’ananas","prix":3500},
+    {"cat":"cocktails","nom":"Margarita","desc":"Tequila, jus de citron, sucre de canne","prix":4000},
+    {"cat":"cocktails","nom":"Baileys Hill’s","desc":"Baileys, vodka, chocolat, crème chantilly","prix":5000},
+
+    {"cat":"mocktails","nom":"Milk-shake","desc":"Lait, menthe, chocolat ou fraise","prix":2000},
+    {"cat":"mocktails","nom":"Bonabora","desc":"Jus d’ananas, jus de citron, sirop de grenadine","prix":2500},
+    {"cat":"mocktails","nom":"Sunset","desc":"Feuille de menthe, sirop de grenadine, jus de citron","prix":2500},
+    {"cat":"mocktails","nom":"Virgin Sex on the Beach","desc":"Jus d’orange, jus d’ananas, sirop de grenadine, jus de fraise","prix":2500},
+    {"cat":"mocktails","nom":"Baobab menthe / fraise","prix":2500},
+    {"cat":"mocktails","nom":"Déesse verte","desc":"Sirop de menthe, jus d’ananas, soda, sel, jus de kiwi","prix":3000},
+
+    {"cat":"consos","nom":"Dry Gin","prix":1500},
+    {"cat":"consos","nom":"Martini","prix":2000},
+    {"cat":"consos","nom":"Vodka Absolut","prix":2500},
+    {"cat":"consos","nom":"J&B / Red Label","prix":2500},
+    {"cat":"consos","nom":"Black Label / Chivas 12 ans","prix":4000},
+
+    {"cat":"liqueurs","nom":"Gordon’s Gin","prix":15000},
+    {"cat":"liqueurs","nom":"Baileys","prix":15000},
+    {"cat":"liqueurs","nom":"Martini","prix":20000},
+    {"cat":"liqueurs","nom":"J&B / Red Label","prix":20000},
+    {"cat":"liqueurs","nom":"Perlino Vermouth Rosso","prix":20000},
+    {"cat":"liqueurs","nom":"Jack Daniel’s 12 ans","prix":30000},
+    {"cat":"liqueurs","nom":"Chivas 12 ans","prix":30000},
+    {"cat":"liqueurs","nom":"Monkey Shoulder","prix":35000},
+    {"cat":"liqueurs","nom":"Glenfiddich 12 ans","prix":40000},
+    {"cat":"liqueurs","nom":"Hennessy","prix":40000},
+    {"cat":"liqueurs","nom":"Singleton 12 ans","prix":45000},
+    {"cat":"liqueurs","nom":"Chivas 18 ans","prix":70000},
+
+    {"cat":"vins-rouges","nom":"Vieux Moulin","prix":5000},
+    {"cat":"vins-rouges","nom":"Souvenir","prix":10000},
+    {"cat":"vins-rouges","nom":"Louis Eschenauer Cabernet","prix":12000},
+    {"cat":"vins-rouges","nom":"Grand Sud","prix":12000},
+    {"cat":"vins-rouges","nom":"Château de Braque","prix":15000},
+    {"cat":"vins-rouges","nom":"Louis Eschenauer Bordeaux","prix":15000},
+    {"cat":"vins-rouges","nom":"Château Barrey","prix":25000},
+    {"cat":"vins-rouges","nom":"Ferrand Haut-Médoc","prix":30000},
+    {"cat":"vins-rouges","nom":"Château d’Arcins","prix":30500},
+
+    {"cat":"vins-blancs","nom":"Tour Cantelou","prix":5000},
+    {"cat":"vins-blancs","nom":"Isabelle de France","prix":5000},
+    {"cat":"vins-blancs","nom":"Touja, Alianor, Hugo","prix":10000},
+    {"cat":"vins-blancs","nom":"Louis Eschenauer vin blanc","prix":10000},
+    {"cat":"vins-blancs","nom":"Grand Sud","prix":12000},
+    {"cat":"vins-blancs","nom":"Montbazillac","prix":15000},
+    {"cat":"vins-blancs","nom":"Saint Narbar (Chardonnay)","prix":18000},
+
+    {"cat":"champagnes","nom":"YBY","prix":10000},
+    {"cat":"champagnes","nom":"Moscato","prix":15000},
+    {"cat":"champagnes","nom":"Pierland Brut","prix":20000},
+    {"cat":"champagnes","nom":"Pierland demi-sec","prix":25000},
+    {"cat":"champagnes","nom":"Moët & Chandon Impérial","prix":90000},
+
+    {"cat":"cafe","nom":"Café simple","prix":500},
+    {"cat":"cafe","nom":"Expresso","prix":1000},
+    {"cat":"cafe","nom":"Cappuccino","prix":1000},
+    {"cat":"cafe","nom":"Chocolat chaud","prix":1500},
+
+    {"cat":"the","nom":"Thé vert / citronnelle","prix":1000},
+    {"cat":"the","nom":"Thé menthe / ginseng","prix":1500},
+    {"cat":"the","nom":"Thé Immortalité","prix":1500},
+    {"cat":"the","nom":"Thé Longévité","prix":1500},
+    {"cat":"the","nom":"Thé noir","prix":1500}
+  ]
+};
+
+(function () {
+'use strict';
+var E = MENU.etablissement, WA = E.whatsapp, NB = ' ';
+var $ = function (id) { return document.getElementById(id); };
+function num(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NB); }
+function F(n) { return num(n) + NB + 'F'; }
+function FCFA(n) { return num(n) + NB + 'FCFA'; }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function norm(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’']/g, ' ').toLowerCase(); }
+var DAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+
+var filter = 'tout', query = '';
+var ART = MENU.articles.map(function (a, i) { a.id = i; return a; });
+/* clé panier : "id|v" ; v = index de variante, ou "u" pour prix unique */
+function price(a, v) { return v === 'u' ? a.prix : a.vars[+v][1]; }
+function label(a, v) { return v === 'u' ? a.nom : a.nom + ' ' + a.vars[+v][0].toLowerCase(); }
+
+/* ---------- heure de Douala (UTC+1) ---------- */
+function doualaNow() { var d = new Date(); return new Date(d.getTime() + d.getTimezoneOffset() * 60000 + 3600000); }
+var NOW = doualaNow(), DOW = (NOW.getDay() + 6) % 7;
+
+/* ---------- infos ---------- */
+$('infoAddr').innerHTML = '<strong>' + esc(E.nom) + '</strong><br>' + esc(E.adresse) + '<br>Tél. : ' + esc(E.telephone) + ' · ' + esc(E.telephone2);
+$('mapsBtn').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Restaurant Chez Marco Bonamoussadi Douala');
+$('waInfo').href = 'https://wa.me/' + WA;
+function hh(h) { return h >= 24 ? '00h' : h + 'h'; }
+$('hours').innerHTML = DAYS.map(function (d, i) { var h = E.horaires[i];
+  return '<tr data-d="' + i + '"><td>' + d + '</td><td>' + (h ? hh(h[0]) + ' – ' + hh(h[1]) : 'Fermé') + '</td></tr>'; }).join('');
+(function () {
+  var h = NOW.getHours() + NOW.getMinutes() / 60;
+  var tr = document.querySelector('#hours tr[data-d="' + DOW + '"]');
+  if (tr) { tr.classList.add('today'); tr.firstChild.insertAdjacentHTML('beforeend', '<span class="tg">Aujourd’hui</span>'); }
+  var hc = E.horaires[DOW], open = hc && h >= hc[0] && h < hc[1], txt;
+  if (open) txt = 'Ouvert · jusqu’à minuit';
+  else if (hc && h < hc[0]) txt = 'Fermé · ouvre à ' + hh(hc[0]);
+  else txt = 'Fermé · ouvre demain à ' + hh(E.horaires[(DOW + 1) % 7][0]);
+  $('status').classList.add(open ? 'open' : 'closed'); $('statusTxt').textContent = txt;
+})();
+
+/* ---------- plat du jour ---------- */
+var todays = ART.filter(function (a) { return a.jour === DOW; });
+if (todays.length) {
+  var t0 = todays[0];
+  $('todayBox').hidden = false;
+  $('todayDay').textContent = DAYS[DOW].slice(0, 3);
+  $('todayName').textContent = todays.map(function (a) { return a.nom; }).join(' · ');
+  $('todayPrice').textContent = todays.map(function (a) { return F(a.prix); }).join(' · ');
+  $('todayAdd').dataset.add = t0.id + '|u';
+  $('todayAdd').setAttribute('aria-label', 'Ajouter ' + t0.nom + ', ' + F(t0.prix));
+} else {
+  $('todayBox').hidden = false;
+  $('todayDay').textContent = DAYS[DOW].slice(0, 3);
+  $('todayName').textContent = 'Pas de menu local ce ' + DAYS[DOW].toLowerCase();
+  $('todayPrice').textContent = 'Découvrez le menu à la carte';
+  $('todayAdd').hidden = true;
+}
+
+/* ---------- puces ---------- */
+var chipsH = '<button type="button" class="chip" data-f="tout" aria-pressed="true">Tout</button>' +
+  '<button type="button" class="chip" data-f="g:cuisine" aria-pressed="false">Cuisine</button>' +
+  '<button type="button" class="chip" data-f="g:boissons" aria-pressed="false">Boissons</button>';
+MENU.categories.forEach(function (c, i) {
+  chipsH += '<button type="button" class="chip' + (i === 0 ? ' sep' : '') + '" data-f="' + c.id + '" aria-pressed="false">' + esc(c.chip || c.nom) + '</button>';
+});
+$('chips').innerHTML = chipsH;
+
+/* ---------- rendu ---------- */
+var PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg>';
+var cart = {}, order = [];
+function itemHTML(a) {
+  var desc = a.desc ? '<p class="it-d">' + esc(a.desc) + '</p>' : '';
+  var day = a.jour != null ? '<span class="day' + (a.jour === DOW ? ' now' : '') + '">' + DAYS[a.jour] + (a.jour === DOW ? ' · aujourd’hui' : '') + '</span>' : '';
+  if (a.vars) {
+    return '<li class="it"><div class="it-m"><div class="it-r"><span class="it-n">' + esc(a.nom) + '</span></div>' + desc +
+      '<div class="vars" role="group" aria-label="' + esc(a.nom) + '">' + a.vars.map(function (v, i) {
+        var k = a.id + '|' + i, q = cart[k] || 0;
+        return '<button type="button" class="vb' + (q ? ' has' : '') + '" data-add="' + k + '" aria-label="Ajouter ' + esc(label(a, String(i))) + ', ' + F(v[1]) + '"><span class="vl">' + esc(v[0]) + '</span><span class="vp">' + F(v[1]) + '</span><span class="pl">' + PLUS + '</span><span class="qb">' + q + '</span></button>';
+      }).join('') + '</div></div></li>';
+  }
+  var k = a.id + '|u', q = cart[k] || 0;
+  return '<li class="it"><div class="it-m"><div class="it-r"><span class="it-n">' + esc(a.nom) + '</span><span class="it-dots"></span><span class="it-p">' + F(a.prix) + '</span></div>' + desc + day + '</div>' +
+    '<button type="button" class="add' + (q ? ' has' : '') + '" data-add="' + k + '" aria-label="Ajouter ' + esc(a.nom) + ', ' + F(a.prix) + '">' + PLUS + '<span class="qb">' + q + '</span></button></li>';
+}
+function renderMenu() {
+  var q = norm(query).trim(), words = q ? q.split(/\s+/) : [];
+  var html = '', lastG = null, shown = 0;
+  MENU.categories.forEach(function (c) {
+    if (filter !== 'tout' && filter !== c.id && filter !== 'g:' + c.groupe) return;
+    var list = ART.filter(function (a) {
+      if (a.cat !== c.id) return false;
+      if (!words.length) return true;
+      var hay = norm(a.nom + ' ' + (a.desc || '') + ' ' + c.nom);
+      return words.every(function (w) { return hay.indexOf(w) >= 0; });
+    });
+    if (!list.length) return;
+    shown += list.length;
+    if (c.groupe !== lastG) {
+      lastG = c.groupe;
+      html += c.groupe === 'cuisine'
+        ? '<div class="grp"><h2>La cuisine</h2><p>de Chez Marco</p></div>'
+        : '<div class="grp" id="boissons"><h2>Le bar</h2><p>Boissons · cocktails</p></div>';
+    }
+    html += '<section class="cat" id="c-' + c.id + '" aria-labelledby="h-' + c.id + '"><div class="cat-h"><h3 id="h-' + c.id + '" class="brush">' + esc(c.nom) + '</h3><span class="cnt">' + list.length + (list.length > 1 ? ' choix' : ' choix') + '</span></div>' +
+      (c.note ? '<p class="cat-note">' + esc(c.note) + '</p>' : '') +
+      '<ul class="items">' + list.map(itemHTML).join('') + '</ul></section>';
+  });
+  if (!shown) html = '<div class="empty-s"><b>Aucun résultat pour « ' + esc(query) + ' »</b>Essayez un autre mot, ou demandez directement sur WhatsApp.</div>';
+  $('menu').innerHTML = html;
+}
+
+/* ---------- panier ---------- */
+function itemOf(k) { var p = k.split('|'); return {a: ART[+p[0]], v: p[1]}; }
+function count() { var c = 0; for (var k in cart) c += cart[k]; return c; }
+function total() { var t = 0; for (var k in cart) { var o = itemOf(k); t += cart[k] * price(o.a, o.v); } return t; }
+function setQty(k, q) {
+  if (q <= 0) { delete cart[k]; order = order.filter(function (x) { return x !== k; }); }
+  else { if (!cart[k]) order.push(k); cart[k] = q; }
+  renderCart(); syncButtons();
+}
+function syncButtons() {
+  document.querySelectorAll('[data-add]').forEach(function (b) {
+    var q = cart[b.dataset.add] || 0; b.classList.toggle('has', q > 0); var qb = b.querySelector('.qb'); if (qb) qb.textContent = q;
+  });
+}
+function mode() { return document.querySelector('input[name="mode"]:checked').value; }
+function buildOrder() {
+  var L = ['[DÉMO · menu digital Programactor / Bongo Space]', 'Bonjour Chez Marco, je souhaite commander :', ''];
+  order.forEach(function (k) { var o = itemOf(k), q = cart[k], p = price(o.a, o.v);
+    L.push('• ' + q + ' × ' + label(o.a, o.v) + ' — ' + F(p) + (q > 1 ? ' (= ' + F(q * p) + ')' : '')); });
+  L.push('', 'Total : ' + FCFA(total()));
+  var m = mode(), t = $('fTable').value.trim(), ad = $('fAddr').value.trim(), n = $('fName').value.trim(), no = $('fNote').value.trim();
+  if (m === 'place') L.push('Mode : Sur place' + (t ? ' — table n° ' + t : ''));
+  else if (m === 'emporter') L.push('Mode : À emporter');
+  else { L.push('Mode : Livraison'); if (ad) L.push('Adresse : ' + ad); L.push('(Frais de livraison à me confirmer)'); }
+  if (n) L.push('Nom : ' + n);
+  if (no) L.push('Note : ' + no);
+  L.push('', 'Merci !');
+  return L.join('\n');
+}
+function updateWa() {
+  var b = $('waBtn');
+  if (!count()) { b.setAttribute('aria-disabled', 'true'); b.href = '#'; return; }
+  b.removeAttribute('aria-disabled'); b.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(buildOrder());
+}
+function renderCart() {
+  var c = count(), t = total(), bar = $('cartbar');
+  bar.classList.toggle('show', c > 0); bar.setAttribute('aria-hidden', c > 0 ? 'false' : 'true'); bar.tabIndex = c > 0 ? 0 : -1;
+  $('cbCount').textContent = c; $('cbItems').textContent = c + (c > 1 ? ' articles' : ' article'); $('cbTotal').textContent = FCFA(t);
+  $('lines').innerHTML = !c ? '<p class="empty">Votre panier est vide.<br>Ajoutez des plats ou des boissons avec le bouton +.</p>' :
+    order.map(function (k) { var o = itemOf(k), q = cart[k], p = price(o.a, o.v), nm = label(o.a, o.v);
+      return '<div class="ln"><div class="lm"><b>' + esc(nm) + '</b><small>' + F(p) + '</small></div><div class="stp">' +
+        '<button type="button" data-dec="' + k + '" aria-label="Retirer un ' + esc(nm) + '">−</button><span>' + q + '</span>' +
+        '<button type="button" data-inc="' + k + '" aria-label="Ajouter un ' + esc(nm) + '">+</button></div><span class="lt">' + F(q * p) + '</span></div>'; }).join('');
+  $('shTotal').textContent = FCFA(t);
+  updateWa();
+}
+
+/* ---------- feuille ---------- */
+var lastFocus = null, openEl = null;
+function openSheet(id) {
+  lastFocus = document.activeElement; openEl = $(id);
+  openEl.classList.add('show'); openEl.setAttribute('aria-hidden', 'false'); $('ov').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function () { var x = openEl.querySelector('[data-close]'); if (x) x.focus({preventScroll: true}); }, 60);
+}
+function closeSheet() {
+  if (!openEl) return;
+  openEl.classList.remove('show'); openEl.setAttribute('aria-hidden', 'true'); $('ov').classList.remove('show');
+  document.body.style.overflow = ''; openEl = null; if (lastFocus && lastFocus.focus) lastFocus.focus({preventScroll: true});
+}
+
+var toastT;
+function toast(m) { var t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('show'); }, 1600); }
+
+document.addEventListener('click', function (e) {
+  var t = e.target;
+  var a = t.closest('[data-add]');
+  if (a) { var k = a.dataset.add; setQty(k, (cart[k] || 0) + 1); var o = itemOf(k); toast('Ajouté : ' + label(o.a, o.v));
+    var bar = $('cartbar'); bar.classList.remove('bump'); void bar.offsetWidth; bar.classList.add('bump'); return; }
+  var inc = t.closest('[data-inc]'); if (inc) { setQty(inc.dataset.inc, cart[inc.dataset.inc] + 1); return; }
+  var dec = t.closest('[data-dec]'); if (dec) { setQty(dec.dataset.dec, cart[dec.dataset.dec] - 1); return; }
+  var f = t.closest('[data-f]'); if (f) { filter = f.dataset.f;
+    document.querySelectorAll('[data-f]').forEach(function (c) { c.setAttribute('aria-pressed', c === f ? 'true' : 'false'); });
+    renderMenu(); syncButtons();
+    var top = $('menu').getBoundingClientRect().top + window.scrollY - $('bar').offsetHeight - 4;
+    if (window.scrollY > top || f.dataset.f !== 'tout') window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); return; }
+  if (t.closest('[data-close]')) { closeSheet(); return; }
+});
+$('cartbar').addEventListener('click', function () { openSheet('cartSheet'); });
+$('ov').addEventListener('click', closeSheet);
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
+var qT; $('q').addEventListener('input', function () { clearTimeout(qT); var v = this.value; qT = setTimeout(function () { query = v; renderMenu(); }, 80); });
+document.querySelectorAll('input[name="mode"]').forEach(function (r) { r.addEventListener('change', function () {
+  var m = mode(); $('tableFld').hidden = m !== 'place'; $('addrFld').hidden = m !== 'livraison'; updateWa(); }); });
+['fTable', 'fAddr', 'fName', 'fNote'].forEach(function (id) { $(id).addEventListener('input', updateWa); });
+$('waBtn').addEventListener('click', function (e) { if (!count()) e.preventDefault(); else updateWa(); });
+
+renderMenu(); renderCart();
+window.__CM = {cart: cart, buildOrder: buildOrder, total: total, setQty: setQty};
+})();
+</script>
